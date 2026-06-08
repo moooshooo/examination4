@@ -1,0 +1,48 @@
+# Systemfiler
+.DS_Store
+Thumbs.db
+
+# Node.js / Bun.js / React
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+bun.lockb
+frontend/cypress.env.json
+
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+/.claude
+
+# Docker
+.docker/
+
+# Backend-specific output
+out
+*.tgz
+
+# Code coverage
+coverage
+*.lcov
+
+# Backend logs
+logs
+*.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# Backend caches
+.eslintcache
+.cache/
+*.tsbuildinfo
+
