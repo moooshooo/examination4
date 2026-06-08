@@ -21,13 +21,11 @@ jobs:
             cd /opt/kurs4/examination4
 
             echo "Laddar miljövariabler..."
-            export $(grep -E '^FORGEJO_USER|^FORGEJO_PASS|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
+            export $(grep -E '^FORGEJO_USER|^FORGEJO_TOKEN|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
 
             echo "Hämtar senaste koden från Forgejo..."
-            git remote set-url origin https://${FORGEJO_USER}:${FORGEJO_PASS}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
-            git fetch origin
-            git reset --hard origin/main
-            git remote set-url origin https://${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
+            git fetch https://${FORGEJO_USER}:${FORGEJO_TOKEN}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
+            git reset --hard FETCH_HEAD
 
             echo "Bygger om och startar Docker-containrarna..."
             docker compose down
