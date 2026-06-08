@@ -21,10 +21,10 @@ jobs:
             cd /opt/kurs4/examination4
 
             echo "Laddar miljövariabler..."
-            export $(grep -E '^FORGEJO_USER|^FORGEJO_TOKEN' .env | xargs)
+            export $(grep -E '^FORGEJO_USER|^FORGEJO_TOKEN|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
 
             echo "Hämtar senaste koden från Forgejo..."
-            git fetch http://${FORGEJO_USER}:${FORGEJO_TOKEN}@100.84.204.43:8013/mos/examination4.git
+            git fetch http://${FORGEJO_USER}:${FORGEJO_TOKEN}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
             git reset --hard FETCH_HEAD
 
             echo "Bygger om och startar Docker-containrarna..."
@@ -37,4 +37,4 @@ jobs:
             echo "Verifierar att containrarna startade..."
             docker compose ps
 
-            echo "Deploy färdig! 🐸 Riiiiibbbittt"
+            echo "Deploy färdig! 🐸 Riiiiibbbit"
