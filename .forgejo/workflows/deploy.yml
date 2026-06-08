@@ -15,16 +15,26 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
+          command_timeout: 10m
           script: |
             echo "Går in i projektmappen..."
             cd /opt/kurs4/examination4
-            
+
+            echo "Laddar miljövariabler..."
+            export $(grep -E '^FORGEJO_USER|^FORGEJO_PASS|^FORGEJO_HOST' .env | xargs)
+
             echo "Hämtar senaste koden från Forgejo..."
-            git fetch origin
-            git reset --hard origin/main
-            
+            git fetch https://${FORGEJO_USER}:${FORGEJO_PASS}@${FORGEJO_HOST}/$(git remote get-url origin | sed 's|.*@||;s|.*://[^/]*/||')
+            git reset --hard FETCH_HEAD
+
             echo "Bygger om och startar Docker-containrarna..."
             docker compose down
             docker compose up -d --build
-            
-            echo "Deploy färdig! 🐸 - Hoppas vi"
+
+            echo "Rensar oanvända Docker-images..."
+            docker image prune -f
+
+            echo "Verifierar att containrarna startade..."
+            docker compose ps
+
+            echo "Deploy färdig! 🐸"
