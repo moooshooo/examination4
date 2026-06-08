@@ -24,11 +24,10 @@ jobs:
             export $(grep -E '^FORGEJO_USER|^FORGEJO_PASS|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
 
             echo "Hämtar senaste koden från Forgejo..."
-            REPO_PATH=$(git remote get-url origin | sed 's|.*@||;s|.*://[^/]*/||')
-            git remote set-url origin https://${FORGEJO_USER}:${FORGEJO_PASS}@${FORGEJO_HOST}:${FORGEJO_PORT}/${REPO_PATH}
+            git remote set-url origin https://${FORGEJO_USER}:${FORGEJO_PASS}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
             git fetch origin
             git reset --hard origin/main
-            git remote set-url origin https://${FORGEJO_HOST}:${FORGEJO_PORT}/${REPO_PATH}
+            git remote set-url origin https://${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
 
             echo "Bygger om och startar Docker-containrarna..."
             docker compose down
