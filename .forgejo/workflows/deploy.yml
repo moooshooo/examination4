@@ -24,7 +24,7 @@ jobs:
             export $(grep -E '^FORGEJO_USER|^FORGEJO_TOKEN|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
 
             echo "Hämtar senaste koden från Forgejo..."
-            git fetch https://${FORGEJO_USER}:${FORGEJO_TOKEN}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
+            git fetch http://${FORGEJO_USER}:${FORGEJO_TOKEN}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
             git reset --hard FETCH_HEAD
 
             echo "Bygger om och startar Docker-containrarna..."
