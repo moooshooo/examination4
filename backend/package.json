@@ -1,20 +1,43 @@
 {
-  "name": "bun-react-template",
-  "version": "0.1.0",
-  "private": true,
+  "name": "backend",
+  "module": "src/index.ts",
   "type": "module",
+  "private": true,
   "scripts": {
-    "dev": "bun --hot src/index.ts",
-    "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
-    "start": "NODE_ENV=production bun src/index.ts"
-  },
-  "dependencies": {
-    "react": "^19",
-    "react-dom": "^19"
+    "start": "bun run src/index.ts",
+    "dev": "NODE_ENV=development bun run --hot src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "migrate": "node-pg-migrate -j ts -m db/migrations",
+    "migrate:create": "node-pg-migrate -j ts -m db/migrations create",
+    "migrate:up": "node-pg-migrate up -j ts -m db/migrations",
+    "migrate:down": "node-pg-migrate down -j ts -m db/migrations",
+    "build": "tsc --noEmit && bun build ./src/index.ts --target=bun --outdir=./dist",
+    "seed": "bun run db/seed/seed.ts",
+    "test": "bun test"
   },
   "devDependencies": {
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@types/bun": "latest"
+    "@eslint/js": "^10.0.1",
+    "@types/amqplib": "^0.10.7",
+    "@types/bun": "latest",
+    "eslint": "^10.2.0",
+    "globals": "^17.5.0",
+    "node-pg-migrate": "^8.0.4",
+    "typescript-eslint": "^8.58.1"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "@fastify/helmet": "^13.0.2",
+    "@fastify/rate-limit": "^10.3.0",
+    "amqplib": "^0.10.8",
+    "dotenv": "^17.4.2",
+    "dotenv-expand": "^12.0.3",
+    "fastify": "^5.8.4",
+    "fastify-plugin": "^5.1.0",
+    "ioredis": "^5.6.1",
+    "pg": "^8.20.0"
   }
 }
