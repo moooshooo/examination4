@@ -24,11 +24,11 @@ jobs:
             export $(grep -E '^FORGEJO_USER|^FORGEJO_PASS|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
 
             echo "Hämtar senaste koden från Forgejo..."
-            git config credential.helper store
-            echo "https://${FORGEJO_USER}:${FORGEJO_PASS}@${FORGEJO_HOST}" > ~/.git-credentials
-            git fetch https://${FORGEJO_HOST}:${FORGEJO_PORT}/$(git remote get-url origin | sed 's|.*@||;s|.*://[^/]*/||')
-            git reset --hard FETCH_HEAD
-            rm ~/.git-credentials
+            REPO_PATH=$(git remote get-url origin | sed 's|.*@||;s|.*://[^/]*/||')
+            git remote set-url origin https://${FORGEJO_USER}:${FORGEJO_PASS}@${FORGEJO_HOST}:${FORGEJO_PORT}/${REPO_PATH}
+            git fetch origin
+            git reset --hard origin/main
+            git remote set-url origin https://${FORGEJO_HOST}:${FORGEJO_PORT}/${REPO_PATH}
 
             echo "Bygger om och startar Docker-containrarna..."
             docker compose down
