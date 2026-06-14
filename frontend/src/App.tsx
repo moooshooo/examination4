@@ -6,10 +6,11 @@ import { getProducts, placeOrder, getOrder } from "./api";
 import type { Product, Order } from "./api";
 import Header from "./components/Header";
 import MatMeny from "./components/MatMeny";
-import DrykMeny from "./components/DrykMeny";
+import DrykMeny from "./components/DryckMeny";
 import Varukorg from "./components/Varukorg";
 import OrderStatus from "./components/OrderStatus";
 import Anslagstavla from "./components/Anslagstavla";
+import Footer from "./components/Footer";
 
 interface CartItem {
   productId: string;
@@ -49,7 +50,10 @@ export default function App() {
         return prev.map((i) =>
           i.productId === product.id ? { ...i, quantity: i.quantity + 1 } : i,
         );
-      return [...prev, { productId: product.id, name: product.name, quantity: 1 }];
+      return [
+        ...prev,
+        { productId: product.id, name: product.name, quantity: 1 },
+      ];
     });
   }, []);
 
@@ -71,7 +75,10 @@ export default function App() {
     try {
       const o = await placeOrder({
         customerId,
-        items: cart.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+        items: cart.map((i) => ({
+          productId: i.productId,
+          quantity: i.quantity,
+        })),
       });
       setOrder(o);
       setCart([]);
@@ -86,32 +93,64 @@ export default function App() {
   const drinkItems = products.filter((p) => p.category === "drink");
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "background.default" }}>
-      <Box sx={{ flex: 1, pb: 8, minWidth: 0 }}>
-        <Header />
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        bgcolor: "background.default",
+      }}
+    >
+      <Header />
 
-        <Container maxWidth="lg">
-          {error && (
-            <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError(null)}>
-              {error}
-            </Alert>
-          )}
+      <Box
+        sx={{
+          display: "flex",
+          flex: 1,
+          "@media (max-width: 399px)": { flexDirection: "column" },
+        }}
+      >
+        <Box sx={{ flex: 1, pb: 8, minWidth: 0 }}>
+          <Container maxWidth="lg">
+            {error && (
+              <Alert
+                severity="error"
+                sx={{ mb: 3 }}
+                onClose={() => setError(null)}
+              >
+                {error}
+              </Alert>
+            )}
+        
+          <Anslagstavla />
+        
 
-          <OrderStatus order={order} />
-          <MatMeny products={foodItems} cart={cart} onAdd={addToCart} onRemove={removeFromCart} />
-          <DrykMeny products={drinkItems} cart={cart} onAdd={addToCart} onRemove={removeFromCart} />
-          <Varukorg
-            cart={cart}
-            products={products}
-            customerId={customerId}
-            setCustomerId={setCustomerId}
-            onSubmit={submitOrder}
-            loading={loading}
-          />
-        </Container>
+            <OrderStatus order={order} />
+            <Varukorg
+              cart={cart}
+              products={products}
+              customerId={customerId}
+              setCustomerId={setCustomerId}
+              onSubmit={submitOrder}
+              loading={loading}
+            />
+            <MatMeny
+              products={foodItems}
+              cart={cart}
+              onAdd={addToCart}
+              onRemove={removeFromCart}
+            />
+            <DrykMeny
+              products={drinkItems}
+              cart={cart}
+              onAdd={addToCart}
+              onRemove={removeFromCart}
+            />
+          </Container>
+          <Footer />
+        </Box>
       </Box>
 
-      <Anslagstavla />
     </Box>
   );
 }

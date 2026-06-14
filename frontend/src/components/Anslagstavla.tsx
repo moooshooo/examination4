@@ -27,14 +27,13 @@ export default function Anslagstavla() {
 
   return (
     <Box sx={{
-      width: 240,
-      minHeight: '100vh',
+      width: '100%',
       bgcolor: '#0a1a0a',
-      borderLeft: '4px solid',
+      borderBottom: '4px solid',
       borderColor: 'primary.main',
-      boxShadow: '-4px 0 0 #000',
+      boxShadow: '0 4px 0 #000',
+      mb: '5px',
       p: 2,
-      flexShrink: 0,
     }}>
       <Typography variant="h6" color="primary" align="center" sx={{ mb: 1 }}>
         📋 ORDRAR
@@ -53,25 +52,28 @@ export default function Anslagstavla() {
         </Typography>
       )}
 
-      {orders.map((order: Order) => {
-        const s = STATUS_LABEL[order.status] ?? { emoji: '⏳', label: order.status.toUpperCase(), color: '#888' }
-        return (
-          <Box key={order.id} sx={{
-            mb: 1.5,
-            p: 1,
-            border: '2px solid',
-            borderColor: s.color,
-            boxShadow: `2px 2px 0 #000`,
-          }}>
-            <Typography variant="caption" display="block" sx={{ color: '#81c784', mb: 0.5 }}>
-              #{shortId(order.id)} · {orderTime(order.created_at)}
-            </Typography>
-            <Typography variant="caption" sx={{ color: s.color, fontWeight: 'bold' }}>
-              {s.emoji} {s.label}
-            </Typography>
-          </Box>
-        )
-      })}
+      <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5, overflowX: 'auto' }}>
+        {orders.map((order: Order) => {
+          const s = STATUS_LABEL[order.status] ?? { emoji: '⏳', label: order.status.toUpperCase(), color: '#888' }
+          return (
+            <Box key={order.id} sx={{
+              minWidth: 140,
+              flexShrink: 0,
+              p: 1,
+              border: '2px solid',
+              borderColor: s.color,
+              boxShadow: `2px 2px 0 #000`,
+            }}>
+              <Typography variant="caption" display="block" sx={{ color: '#81c784', mb: 0.5 }}>
+                #{shortId(order.id)} · {orderTime(order.created_at)}
+              </Typography>
+              <Typography variant="caption" sx={{ color: s.color, fontWeight: 'bold' }}>
+                {s.emoji} {s.label}
+              </Typography>
+            </Box>
+          )
+        })}
+      </Box>
     </Box>
   )
 }

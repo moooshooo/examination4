@@ -13,7 +13,18 @@ export default function Header() {
         boxShadow: "0 4px 0 #000",
       }}
     >
-      <Container>
+      <Container >
+        <Typography variant="h3" color="primary" align="center">
+          TOADS DELIGHT
+        </Typography>
+        <Typography
+          variant="caption"
+          color="secondary"
+          align="center"
+          display="block" sx={{ mb: 2 }}
+        >
+          ✦ DAMMETS FINASTE KROG — SEDAN GÖMINNAN ✦
+        </Typography>
         <Box
           component="img"
           src="/toads_delight_banner.jpeg"
@@ -21,23 +32,12 @@ export default function Header() {
           sx={{
             display: "block",
             width: "100%",
-            height: 225,
+            height: 270,
             objectFit: "cover",
             imageRendering: "pixelated",
-            mb: 2,
+            mb: 0,
           }}
         />
-        <Typography variant="h3" color="primary" align="center" sx={{ mb: 1 }}>
-          TOADS DELIGHT
-        </Typography>
-        <Typography
-          variant="caption"
-          color="secondary"
-          align="center"
-          display="block"
-        >
-          ✦ DAMMETS FINASTE KROG — SEDAN GÖMINNAN ✦
-        </Typography>
       </Container>
     </Box>
   );
