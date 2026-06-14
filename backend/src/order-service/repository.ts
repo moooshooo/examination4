@@ -5,7 +5,7 @@ import type { CreateOrder } from '../shared/types'
 export interface Order {
   id: string
   customer_id: string
-  status: 'placed' | 'preparing' | 'ready' | 'delivered'
+  status: 'placed' | 'cooking' | 'ready'
   created_at: string
 }
 
@@ -33,6 +33,17 @@ export class OrderRepository {
     } finally {
       client.release()
     }
+  }
+
+  async findActive(): Promise<Order[]> {
+    const { rows } = await pool.query<Order>(`
+      SELECT id, customer_id, status, created_at
+      FROM orders
+      WHERE status IN ('placed', 'cooking')
+         OR (status = 'ready' AND created_at > NOW() - INTERVAL '10 minutes')
+      ORDER BY created_at DESC
+    `)
+    return rows
   }
 
   async findById(id: string): Promise<Order | null> {

@@ -33,6 +33,10 @@ app.post('/api/v1/orders', async (req, reply) =>
   )
 )
 
+app.get('/api/v1/orders/active', async (_, reply) =>
+  proxy(await fetch(`${ORDER_SVC}/api/v1/orders/active`), reply)
+)
+
 app.get<{ Params: { id: string } }>('/api/v1/orders/:id', async (req, reply) =>
   proxy(await fetch(`${ORDER_SVC}/api/v1/orders/${req.params.id}`), reply)
 )

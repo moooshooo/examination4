@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS orders (
   id          UUID  PRIMARY KEY DEFAULT gen_random_uuid(),
   customer_id TEXT  NOT NULL,
   status      TEXT  NOT NULL DEFAULT 'placed'
-              CHECK (status IN ('placed', 'preparing', 'ready', 'delivered')),
+              CHECK (status IN ('placed', 'cooking', 'ready')),
   created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 

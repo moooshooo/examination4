@@ -13,6 +13,8 @@ export const CreateOrderSchema = z.object({
 
 export type CreateOrder = z.infer<typeof CreateOrderSchema>
 
+export type OrderStatus = 'placed' | 'cooking' | 'ready'
+
 export const QUEUES = {
   ORDER_PLACED: 'order_placed',
   ORDER_READY: 'order_ready',
