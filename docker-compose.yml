@@ -1,9 +1,9 @@
 # docker-compose.yml
 services:
+
+  # ── Infrastruktur (inga externa portar) ────────────────────────────────────
   postgres:
     image: postgres:16-alpine
-    ports:
-      - "${POSTGRES_PORT:-5415}:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -21,9 +21,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    ports:
-      - "${RABBITMQ_PORT:-5615}:5672"
-      - "${RABBITMQ_MANAGEMENT_PORT:-15615}:15672"
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
@@ -39,8 +36,6 @@ services:
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "${REDIS_PORT:-6315}:6379"
     volumes:
       - redis-data:/data
     healthcheck:
@@ -51,6 +46,7 @@ services:
     networks:
       - toads-network
 
+  # ── App-tjänster (interna, inga externa portar) ───────────────────────────
   product-service:
     build:
       context: ./backend
@@ -120,6 +116,49 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+    networks:
+      - toads-network
+
+  gateway:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        SERVICE: gateway
+    environment:
+      SERVICE: gateway
+      PORT: "3000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      order-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+    networks:
+      - toads-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - gateway
+    networks:
+      - toads-network
+
+  # ── Publik ingång ──────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${NGINX_PORT:-8015}:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - gateway
+      - frontend
     networks:
       - toads-network
 
