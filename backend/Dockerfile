@@ -1,13 +1,14 @@
-FROM oven/bun:1 AS base
+# backend/Dockerfile
+FROM oven/bun:1-alpine
 WORKDIR /app
 
-# Install dependencies
-COPY package.json bun.lockb* ./
-RUN bun install
+COPY package.json bun.lock* ./
+RUN bun install --frozen-lockfile
 
-# Copy source
-COPY . .
+COPY tsconfig.json ./
+COPY src/ ./src/
 
-EXPOSE 3000
+ARG SERVICE=product-service
+ENV SERVICE=${SERVICE}
 
-CMD ["bun", "run", "src/index.ts"]
+CMD sh -c "bun run src/${SERVICE}/index.ts"

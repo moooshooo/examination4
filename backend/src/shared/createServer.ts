@@ -1,0 +1,25 @@
+// src/shared/createServer.ts
+import Fastify, { type FastifyInstance } from 'fastify'
+import fastifyCors from '@fastify/cors'
+import fastifyHelmet from '@fastify/helmet'
+import fastifyRateLimit from '@fastify/rate-limit'
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod'
+
+export function createServer(serviceName: string): FastifyInstance {
+  const app = Fastify({ logger: true })
+
+  app.setValidatorCompiler(validatorCompiler)
+  app.setSerializerCompiler(serializerCompiler)
+
+  app.register(fastifyCors)
+  app.register(fastifyHelmet)
+  app.register(fastifyRateLimit, { max: 100, timeWindow: '1 minute' })
+
+  app.get('/api/v1/health', async () => ({
+    status: 'ok',
+    service: serviceName,
+    timestamp: new Date().toISOString(),
+  }))
+
+  return app
+}
