@@ -68,4 +68,12 @@ INSERT INTO products (name, description, price, category) VALUES
 
   ('Lövgrodsjuice',
    'Pressad saft av trädfrukt filtrerad genom lövgrodshänder för extra smak',
-   45.00, 'drink');
+   45.00, 'drink'),
+
+  ('Vändstek fluga',
+   'Kom och som färska flugor, dom är skitgoda.',
+   66.00, 'food'),
+
+  ('Fermenterat nyckelpigge-IPA',
+   'Bara finaste unga nyckelpigor av högsta kvalitet, väldigt riklig smak och du känner av prickarna vid varje klunk.',
+   33.00, 'drink');

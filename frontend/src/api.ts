@@ -41,3 +41,9 @@ export async function getOrder(id: string): Promise<Order> {
   if (!res.ok) throw new Error('Hittade inte ordern')
   return res.json()
 }
+
+export async function getActiveOrders(): Promise<Order[]> {
+  const res = await fetch(`${BASE}/v1/orders/active`)
+  if (!res.ok) throw new Error('Kunde inte hämta aktiva ordrar')
+  return res.json()
+}

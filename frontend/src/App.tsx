@@ -5,8 +5,10 @@ import {
   Button, TextField, Chip, Alert, CircularProgress,
   Container, Divider, Stack,
 } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
 import { getProducts, placeOrder, getOrder } from './api'
 import type { Product, Order } from './api'
+import Anslagstavla from './components/Anslagstavla'
 
 interface CartItem { productId: string; name: string; quantity: number }
 
@@ -54,22 +56,24 @@ function MenuCard({
 
 // ── Huvud-app ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [products, setProducts]   = useState<Product[]>([])
-  const [cart, setCart]           = useState<CartItem[]>([])
+  const [cart, setCart]             = useState<CartItem[]>([])
   const [customerId, setCustomerId] = useState('')
-  const [order, setOrder]         = useState<Order | null>(null)
-  const [loading, setLoading]     = useState(false)
-  const [error, setError]         = useState<string | null>(null)
+  const [order, setOrder]           = useState<Order | null>(null)
+  const [loading, setLoading]       = useState(false)
+  const [error, setError]           = useState<string | null>(null)
+
+  const { data: products = [], isError: productsError } = useQuery({
+    queryKey: ['products'],
+    queryFn: getProducts,
+  })
 
   useEffect(() => {
-    getProducts()
-      .then(setProducts)
-      .catch(() => setError('Kunde inte nå menyn — är köket öppet? 🐸'))
-  }, [])
+    if (productsError) setError('Kunde inte nå menyn — är köket öppet? 🐸')
+  }, [productsError])
 
   // Polla orderstatus var 3:e sekund tills den är "ready"
   useEffect(() => {
-    if (!order || order.status === 'ready' || order.status === 'delivered') return
+    if (!order || order.status === 'ready') return
     const id = setInterval(async () => {
       const updated = await getOrder(order.id).catch(() => null)
       if (updated) setOrder(updated)
@@ -116,11 +120,13 @@ export default function App() {
   }, 0)
 
   const statusEmoji: Record<string, string> = {
-    placed: '📋', preparing: '🍳', ready: '🔔', delivered: '✅',
+    placed: '📋', cooking: '👨‍🍳', ready: '✅',
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default', pb: 8 }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    {/* ── Huvudinnehåll ── */}
+    <Box sx={{ flex: 1, pb: 8, minWidth: 0 }}>
       {/* ── Header ── */}
       <Box sx={{
         bgcolor: '#0a1a0a',
@@ -235,6 +241,9 @@ export default function App() {
           </Box>
         )}
       </Container>
+    </Box>
+
+      <Anslagstavla />
     </Box>
   )
 }
