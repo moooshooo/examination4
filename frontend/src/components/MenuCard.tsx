@@ -33,7 +33,7 @@ export default function MenuCard({
   return (
     <Card sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant="body1" color="secondary" sx={{ mb: 1 }}>
+        <Typography variant="body1" color="secondary" sx={{ mb: 1, mt: 1 }}>
           {emoji} {product.name}
         </Typography>
         <Typography
