@@ -27,7 +27,7 @@ export default function Header() {
             mb: 2,
           }}
         />
-        <Typography variant="h4" color="primary" align="center" sx={{ mb: 1 }}>
+        <Typography variant="h3" color="primary" align="center" sx={{ mb: 1 }}>
           TOADS DELIGHT
         </Typography>
         <Typography

@@ -22,13 +22,18 @@ export default function MatMeny({
 }) {
   return (
     <>
-      <Typography variant="h6" color="primary" sx={{ mb: 2 }}>
+      <Typography variant="h4" color="primary" sx={{ mb: 2 }}>
         ══ [ MAT ] ══
       </Typography>
       <Grid container spacing={2} sx={{ mb: 4 }}>
         {products.map((p) => (
           <Grid item xs={12} sm={6} md={4} key={p.id}>
-            <MenuCard product={p} cart={cart} onAdd={onAdd} onRemove={onRemove} />
+            <MenuCard
+              product={p}
+              cart={cart}
+              onAdd={onAdd}
+              onRemove={onRemove}
+            />
           </Grid>
         ))}
       </Grid>
