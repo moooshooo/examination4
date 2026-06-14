@@ -1,0 +1,52 @@
+# .forgejo/workflows/ci.yml
+name: CI/CD
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # ── Tester (körs alltid vid push/PR) ───────────────────────────────────────
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Bun
+        run: |
+          curl -fsSL https://bun.sh/install | bash
+          echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+
+      - name: Installera backend-beroenden
+        working-directory: backend
+        run: bun install
+
+      - name: Kör enhetstester (Zod-scheman)
+        working-directory: backend
+        run: bun test src/tests/schema.test.ts
+
+  # ── Deploy (bara på main, kräver att test passerar) ───────────────────────
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          command_timeout: 10m
+          script: |
+            cd /opt/examination4
+            export $(grep -E '^FORGEJO_USER|^FORGEJO_TOKEN|^FORGEJO_HOST|^FORGEJO_PORT' .env | xargs)
+            git fetch http://${FORGEJO_USER}:${FORGEJO_TOKEN}@${FORGEJO_HOST}:${FORGEJO_PORT}/mos/examination4.git
+            git reset --hard FETCH_HEAD
+            docker compose down
+            docker compose up -d --build
+            docker image prune -f
+            docker compose ps
+            echo "Deploy done! 🐸"
