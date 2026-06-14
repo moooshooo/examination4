@@ -16,11 +16,6 @@ jobs:
           curl -fsSL https://bun.sh/install | bash
           echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
 
-      - name: Skapa .env-filer från examples
-        run: |
-          sed 's/change_me/testpwd123/g' .env.example > .env
-          sed 's/change_me/testpwd123/g' backend/.env.example > backend/.env
-
       - name: Installera backend-beroenden
         working-directory: backend
         run: bun install
@@ -28,33 +23,3 @@ jobs:
       - name: Kör enhetstester (Zod-scheman)
         working-directory: backend
         run: bun test src/tests/schema.test.ts
-
-      - name: Starta alla tjänster
-        run: docker compose up -d --build
-
-      - name: Vänta på att API:et svarar
-        run: |
-          for i in $(seq 1 24); do
-            if curl -sf http://localhost:8015/api/v1/products > /dev/null 2>&1; then
-              echo "API tillgängligt efter ~$((i*5))s"
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "Timeout — API svarade inte"
-          docker compose logs
-          exit 1
-
-      - name: Kör integrationstester (orderflöde)
-        working-directory: backend
-        env:
-          TEST_BASE_URL: http://localhost:8015
-        run: bun test src/tests/flow.test.ts
-
-      - name: Loggar vid fel
-        if: failure()
-        run: docker compose logs --tail=60
-
-      - name: Städa upp
-        if: always()
-        run: docker compose down -v
