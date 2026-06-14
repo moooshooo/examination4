@@ -34,7 +34,7 @@ function MenuCard({
           {product.description}
         </Typography>
         <Typography variant="body2" color="primary">
-          {Number(product.price).toFixed(2)} kr
+          {Math.round(Number(product.price))} kr
         </Typography>
       </CardContent>
       <CardActions sx={{ p: 1.5, pt: 0 }}>
@@ -214,7 +214,7 @@ export default function App() {
             <Divider sx={{ my: 2 }} />
 
             <Typography variant="caption" color="secondary" display="block" sx={{ mb: 2 }}>
-              TOTALT: {cartTotal.toFixed(2)} kr
+              TOTALT: {Math.round(cartTotal)} kr
             </Typography>
 
             <TextField
