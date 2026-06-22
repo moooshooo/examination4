@@ -6,9 +6,9 @@ const app = createServer('product-service')
 const repo = new ProductRepository()
 const PORT = Number(process.env.PORT) || 3001
 
-app.get('/api/v1/products', async () => repo.findAll())
+app.get('/api/products', async () => repo.findAll())
 
-app.get<{ Params: { id: string } }>('/api/v1/products/:id', async (req, reply) => {
+app.get<{ Params: { id: string } }>('/api/products/:id', async (req, reply) => {
   const product = await repo.findById(req.params.id)
   if (!product) return reply.code(404).send({ error: 'Product not found' })
   return product

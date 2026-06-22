@@ -19,11 +19,11 @@ Allt trafik går via nginx på port **8015**:
 
 | Resurs | Metod | URL |
 |---|---|---|
-| Produkter | GET | `http://localhost:8015/api/v1/products` |
-| Skapa order | POST | `http://localhost:8015/api/v1/orders` |
-| Hämta order | GET | `http://localhost:8015/api/v1/orders/:id` |
-| Aktiva ordrar | GET | `http://localhost:8015/api/v1/orders/active` |
-| Uppdatera kökets status | POST | `http://localhost:8015/api/v1/kitchen/orders/:id/status` |
+| Produkter | GET | `http://localhost:8015/api/products` |
+| Skapa order | POST | `http://localhost:8015/api/orders` |
+| Hämta order | GET | `http://localhost:8015/api/orders/:id` |
+| Aktiva ordrar | GET | `http://localhost:8015/api/orders/active` |
+| Uppdatera kökets status | POST | `http://localhost:8015/api/kitchen/orders/:id/status` |
 
 ## Testa flödet
 

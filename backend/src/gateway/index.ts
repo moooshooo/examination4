@@ -13,18 +13,18 @@ async function proxy(res: Response, reply: any) {
 }
 
 // ── Products ─────────────────────────────────────────────────────────────────
-app.get('/api/v1/products', async (_, reply) =>
-  proxy(await fetch(`${PRODUCT_SVC}/api/v1/products`), reply)
+app.get('/api/products', async (_, reply) =>
+  proxy(await fetch(`${PRODUCT_SVC}/api/products`), reply)
 )
 
-app.get<{ Params: { id: string } }>('/api/v1/products/:id', async (req, reply) =>
-  proxy(await fetch(`${PRODUCT_SVC}/api/v1/products/${req.params.id}`), reply)
+app.get<{ Params: { id: string } }>('/api/products/:id', async (req, reply) =>
+  proxy(await fetch(`${PRODUCT_SVC}/api/products/${req.params.id}`), reply)
 )
 
 // ── Orders ────────────────────────────────────────────────────────────────────
-app.post('/api/v1/orders', async (req, reply) =>
+app.post('/api/orders', async (req, reply) =>
   proxy(
-    await fetch(`${ORDER_SVC}/api/v1/orders`, {
+    await fetch(`${ORDER_SVC}/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(req.body),
@@ -33,12 +33,12 @@ app.post('/api/v1/orders', async (req, reply) =>
   )
 )
 
-app.get('/api/v1/orders/active', async (_, reply) =>
-  proxy(await fetch(`${ORDER_SVC}/api/v1/orders/active`), reply)
+app.get('/api/orders/active', async (_, reply) =>
+  proxy(await fetch(`${ORDER_SVC}/api/orders/active`), reply)
 )
 
-app.get<{ Params: { id: string } }>('/api/v1/orders/:id', async (req, reply) =>
-  proxy(await fetch(`${ORDER_SVC}/api/v1/orders/${req.params.id}`), reply)
+app.get<{ Params: { id: string } }>('/api/orders/:id', async (req, reply) =>
+  proxy(await fetch(`${ORDER_SVC}/api/orders/${req.params.id}`), reply)
 )
 
 app.listen({ host: '0.0.0.0', port: PORT }, (err) => {

@@ -10,7 +10,7 @@ const PORT = Number(process.env.PORT) || 3002
 
 let channel: Awaited<ReturnType<typeof connectRabbitMQ>>
 
-app.post('/api/v1/orders', async (req, reply) => {
+app.post('/api/orders', async (req, reply) => {
   const result = CreateOrderSchema.safeParse(req.body)
   if (!result.success) return reply.code(400).send({ error: result.error.issues })
 
@@ -23,9 +23,9 @@ app.post('/api/v1/orders', async (req, reply) => {
   return reply.code(201).send(order)
 })
 
-app.get('/api/v1/orders/active', async () => repo.findActive())
+app.get('/api/orders/active', async () => repo.findActive())
 
-app.get<{ Params: { id: string } }>('/api/v1/orders/:id', async (req, reply) => {
+app.get<{ Params: { id: string } }>('/api/orders/:id', async (req, reply) => {
   const order = await repo.findById(req.params.id)
   if (!order) return reply.code(404).send({ error: 'Order not found' })
   return order

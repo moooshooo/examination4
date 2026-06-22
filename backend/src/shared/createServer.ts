@@ -15,7 +15,7 @@ export function createServer(serviceName: string): FastifyInstance {
   app.register(fastifyHelmet)
   app.register(fastifyRateLimit, { max: 100, timeWindow: '1 minute' })
 
-  app.get('/api/v1/health', async () => ({
+  app.get('/api/health', async () => ({
     status: 'ok',
     service: serviceName,
     timestamp: new Date().toISOString(),

@@ -13,7 +13,7 @@ async function setOrderStatus(orderId: string, status: 'cooking' | 'ready') {
 }
 
 app.post<{ Params: { orderId: string }; Body: { status: 'cooking' | 'ready' } }>(
-  '/api/v1/kitchen/orders/:orderId/status',
+  '/api/kitchen/orders/:orderId/status',
   async (req, reply) => {
     const { orderId } = req.params
     const { status } = req.body as { status?: string }
