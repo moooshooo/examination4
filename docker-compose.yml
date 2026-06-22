@@ -34,18 +34,6 @@ services:
     networks:
       - toads-network
 
-  redis:
-    image: redis:7-alpine
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-    networks:
-      - toads-network
-
   # ── App-tjänster (interna, inga externa portar) ───────────────────────────
   product-service:
     build:
@@ -167,7 +155,6 @@ services:
 volumes:
   postgres-data:
   rabbitmq-data:
-  redis-data:
 
 networks:
   toads-network:
