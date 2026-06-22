@@ -22,9 +22,9 @@ jobs:
         working-directory: backend
         run: bun install
 
-      - name: Kör enhetstester (Zod-scheman)
+      - name: Kör integrationstester
         working-directory: backend
-        run: bun test src/tests/schema.test.ts
+        run: bun test src/tests/flow.test.ts
 
   # ── Deploy (bara på main, kräver att test passerar) ───────────────────────
   deploy:
