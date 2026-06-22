@@ -2,7 +2,7 @@
 import { createServer } from '../shared/createServer'
 import { OrderRepository } from './repository'
 import { connectRabbitMQ, publish } from '../shared/rabbitmq'
-import { CreateOrderSchema, QUEUES, type CreateOrder } from '../shared/types'
+import { QUEUES, type CreateOrder } from '../shared/types'
 
 const app = createServer('order-service')
 const repo = new OrderRepository()
@@ -11,10 +11,7 @@ const PORT = Number(process.env.PORT) || 3002
 let channel: Awaited<ReturnType<typeof connectRabbitMQ>>
 
 app.post('/api/orders', async (req, reply) => {
-  const result = CreateOrderSchema.safeParse(req.body)
-  if (!result.success) return reply.code(400).send({ error: result.error.issues })
-
-  const order = await repo.create(result.data as CreateOrder)
+  const order = await repo.create(req.body as CreateOrder)
   await publish(channel, QUEUES.ORDER_PLACED, {
     orderId: order.id,
     customerId: order.customer_id,

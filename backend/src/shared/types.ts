@@ -1,17 +1,12 @@
-// src/shared/types.ts
-import { z } from 'zod'
+export interface OrderItem {
+  productId: string
+  quantity: number
+}
 
-export const OrderItemSchema = z.object({
-  productId: z.string().uuid(),
-  quantity: z.number().int().positive(),
-})
-
-export const CreateOrderSchema = z.object({
-  customerId: z.string(),
-  items: z.array(OrderItemSchema).min(1),
-})
-
-export type CreateOrder = z.infer<typeof CreateOrderSchema>
+export interface CreateOrder {
+  customerId: string
+  items: OrderItem[]
+}
 
 export type OrderStatus = 'placed' | 'cooking' | 'ready'
 
