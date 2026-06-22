@@ -18,6 +18,27 @@ jobs:
           curl -fsSL https://bun.sh/install | bash
           echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
 
+      - name: Skapa .env filer
+        run: |
+          echo "POSTGRES_USER=postgres" >> .env
+          echo "POSTGRES_PASSWORD=ci_password" >> .env
+          echo "POSTGRES_DB=toads_delight" >> .env
+          echo "RABBITMQ_USER=guest" >> .env
+          echo "RABBITMQ_PASSWORD=guest" >> .env
+
+          echo "DATABASE_URL=postgresql://postgres:ci_password@postgres:5432/toads_delight" >> backend/.env
+          echo "RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672" >> backend/.env
+
+      - name: Starta systemet
+        run: docker compose up -d --build
+
+      - name: Vänta tills systemet är redo
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8015/api/health && break
+            sleep 5
+          done
+
       - name: Installera backend-beroenden
         working-directory: backend
         run: bun install
